@@ -6,8 +6,8 @@ namespace OSK.Serialization.Abstractions
 {
     public interface ISerializer
     {
-        Task<object> DeserializeAsync(byte[] data, Type type, CancellationToken cancellationToken = default);
+        ValueTask<object> DeserializeAsync(byte[] data, Type type, CancellationToken cancellationToken = default);
 
-        Task<byte[]> SerializeAsync(object data, CancellationToken cancellationToken = default);
+        ValueTask<byte[]> SerializeAsync(object data, CancellationToken cancellationToken = default);
     }
 }
