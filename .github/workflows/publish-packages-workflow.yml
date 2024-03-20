@@ -1,0 +1,52 @@
+name: Publish packages
+
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+
+permissions:
+  packages: write
+  contents: read
+    
+jobs:
+  setub-publish:
+    runs-on: ubuntu-latest
+    outputs:
+      PACKAGE_VERSION: ${{ steps.get_version.outputs.PACKAGE_VERSION }}
+    steps:
+      - name: Get the version
+        id: get_version
+        run: echo "PACKAGE_VERSION=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_OUTPUT" 
+
+  publish-nuget:
+    runs-on: ubuntu-latest
+    needs: setub-publish
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x' # SDK Version to use.
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      - run: dotnet build --configuration Release ./src /p:Version=${{ needs.setub-publish.outputs.PACKAGE_VERSION }}
+      - name: Create the package
+        run: dotnet pack --configuration Release ./src -o . /p:Version=$${{ needs.setub-publish.outputs.PACKAGE_VERSION }}
+      - name: Publish the package to Nuget
+        run: dotnet nuget push ./*.nupkg --api-key ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json
+  publish-github:
+    runs-on: ubuntu-latest
+    needs: setub-publish
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x' # SDK Version to use.
+          source-url: https://nuget.pkg.github.com/OpenSourceKingdom/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_PACKAGE_READ_ACCESS}}
+      - run: dotnet build --configuration Release ./src /p:Version=$${{ needs.setub-publish.outputs.PACKAGE_VERSION }}
+      - name: Create the package
+        run: dotnet pack --configuration Release ./src -o . /p:Version=$${{ needs.setub-publish.outputs.PACKAGE_VERSION }}
+      - name: Publish the package to GPR
+        run: dotnet nuget push ./*.nupkg --api-key ${{secrets.GITHUB_TOKEN}}
