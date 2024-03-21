@@ -10,6 +10,10 @@
 		<Title>OSK.Serialization.Abstractions.Binary</Title>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\OSK.Serialization.Abstractions\OSK.Serialization.Abstractions.csproj" />
 	</ItemGroup>
