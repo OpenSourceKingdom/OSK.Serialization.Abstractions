@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<RepositoryUrl>https://github.com/OpenSourceKingdom/OSK.Serialization.Abstractions</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<Description>An abstraction layer for binary serializers that enables easy, flexibile, and quick serialization and deserialization of objects in .NET</Description>
+		<PackageTags>OpenSourceKingdom, OpenSource, Serialization, Deserialization, Serializing, Deserializing, Abstractions, Converting, Data, Storage, Binary, Bin</PackageTags>
+		<Authors>BlankDev117</Authors>
+		<Title>OSK.Serialization.Abstractions.Binary</Title>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OSK.Serialization.Abstractions\OSK.Serialization.Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>
